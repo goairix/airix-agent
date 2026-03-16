@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/dysodeng/mq/contract"
 	"go.uber.org/zap"
@@ -20,7 +21,16 @@ import (
 
 // ProvideConfig 提供配置
 func ProvideConfig() (*config.Config, error) {
-	return config.LoadConfig("configs/config.yaml")
+	result, err := config.Load("configs/config.yaml")
+	if err != nil {
+		return nil, err
+	}
+	if result.Source != "local" {
+		slog.Info("配置已从配置中心加载",
+			"source", result.Source,
+			"path", result.SourcePath)
+	}
+	return result.Config, nil
 }
 
 // ProvideMonitor 提供可观测性配置

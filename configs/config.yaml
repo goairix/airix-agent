@@ -1,3 +1,14 @@
+# 配置中心（可选，启用后将从配置中心加载完整配置）
+# config_center:
+#   type: etcd
+#   etcd:
+#     endpoints:
+#       - "127.0.0.1:2379"
+#     key: "/app-service/config"
+#     timeout: 5s
+#     username: ""
+#     password: ""
+
 # 应用配置
 app:
   name: app
