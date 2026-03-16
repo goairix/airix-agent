@@ -8,7 +8,7 @@ require (
 	github.com/bytedance/sonic v1.14.2
 	github.com/dysodeng/fs v0.3.6
 	github.com/dysodeng/mq v0.3.4
-	github.com/dysodeng/rpc v0.2.3
+	github.com/dysodeng/rpc v0.2.6
 	github.com/dysodeng/wx v0.1.6
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-gormigrate/gormigrate/v2 v2.1.5
