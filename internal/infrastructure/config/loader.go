@@ -194,7 +194,7 @@ func loadFromSource(source Source) (*Config, error) {
 
 // createSource 根据配置中心配置创建配置源
 func createSource(cc *ConfigCenterConfig) Source {
-	if cc == nil || cc.Type == "" {
+	if cc == nil || cc.Type == "" || cc.Type == "static" {
 		return nil
 	}
 	switch cc.Type {
