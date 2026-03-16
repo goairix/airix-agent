@@ -214,11 +214,8 @@ func sourceKey(cc *ConfigCenterConfig) string {
 	if cc == nil {
 		return ""
 	}
-	switch cc.Type {
-	case "etcd":
-		if cc.Etcd != nil {
-			return cc.Etcd.Key
-		}
+	if cc.Type == "etcd" && cc.Etcd != nil {
+		return cc.Etcd.Key
 	}
 	return ""
 }
