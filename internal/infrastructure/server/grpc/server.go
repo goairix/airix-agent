@@ -67,7 +67,7 @@ func (s *Server) Start() error {
 		EtcdConfig: rpcConfig.EtcdConfig{
 			Endpoints:   strings.Split(s.config.Etcd.GRPC.Addr, ","),
 			DialTimeout: 5,
-			Namespace:   s.config.Server.GRPC.Namespace,
+			Namespace:   strings.Trim(s.config.Etcd.GRPC.KeyPrefix, "/"),
 		},
 	}
 	if s.config.Monitor.Metrics.OtlpEnabled {

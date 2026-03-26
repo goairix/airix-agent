@@ -20,10 +20,9 @@ type HTTPConfig struct {
 
 // GRPCConfig gRPC配置
 type GRPCConfig struct {
-	Enabled   bool   `mapstructure:"enabled"`
-	Host      string `mapstructure:"host"`
-	Port      int    `mapstructure:"port"`
-	Namespace string `mapstructure:"namespace"`
+	Enabled bool   `mapstructure:"enabled"`
+	Host    string `mapstructure:"host"`
+	Port    int    `mapstructure:"port"`
 }
 
 // WebSocketConfig WebSocket配置

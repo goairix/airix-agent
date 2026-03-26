@@ -2,6 +2,7 @@ package logger
 
 import (
 	"context"
+	"log"
 
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
@@ -40,6 +41,15 @@ func InitLogger(debug bool) {
 }
 
 func (l *logger) log(ctx context.Context, level zapcore.Level, message string, fields ...Field) {
+	// logger 未初始化时降级到标准库日志
+	if l == nil || l._logger == nil {
+		if level == zapcore.FatalLevel {
+			log.Fatalf("[FATAL] %s %v", message, fieldsToArgs(fields))
+		}
+		log.Printf("[%s] %s %v", level.CapitalString(), message, fieldsToArgs(fields))
+		return
+	}
+
 	fields = append(
 		fields,
 		l.trace(ctx)...,
@@ -74,6 +84,15 @@ func (l *logger) trace(ctx context.Context) []Field {
 		}
 	}
 	return fields
+}
+
+// fieldsToArgs 将 Field 切片转为适合标准库日志输出的参数
+func fieldsToArgs(fields []Field) []interface{} {
+	args := make([]interface{}, 0, len(fields)*2)
+	for _, f := range fields {
+		args = append(args, f.Key, f.Value)
+	}
+	return args
 }
 
 func Debug(ctx context.Context, message string, fields ...Field) {

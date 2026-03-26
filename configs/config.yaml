@@ -1,13 +1,13 @@
 # 配置中心（可选，type 为 static 时使用本地配置，设为 etcd 时从配置中心加载）
 config_center:
   type: static
-  # etcd:
-  #   endpoints:
-  #     - "127.0.0.1:2379"
-  #   key: "/app-service/config"
-  #   timeout: 5s
-  #   username: ""
-  #   password: ""
+  etcd:
+    endpoints:
+      - "127.0.0.1:2379"
+    key: "/app-service/config"
+    timeout: 5s
+    username: ""
+    password: ""
 
 # 应用配置
 app:
@@ -26,7 +26,6 @@ server:
     enabled: true
     host: 0.0.0.0
     port: 3000
-    namespace: "app"
   websocket:
     enabled: true
     host: 0.0.0.0
@@ -48,10 +47,15 @@ database:
   migration:
     enabled: true
   driver: postgres
+  host: 127.0.0.1
+  port: 5432
+  username: postgres
+  password: postgres
   database:
   max_open_conns: 100
   max_idle_conns: 10
   conn_max_lifetime: 3600s
+  tracer_enable: false
 
 # redis配置
 redis:
@@ -149,6 +153,7 @@ message_queue:
 etcd:
   grpc:
     addr: 127.0.0.1:2379
+    key_prefix: "/app/"
 
 # 文件存储配置
 storage:

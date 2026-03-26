@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"log/slog"
+	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
@@ -28,6 +30,19 @@ func Load(path string) (*LoadResult, error) {
 	bootstrap.AutomaticEnv()
 	if err := bootstrap.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("读取配置文件失败: %w", err)
+	}
+
+	// 显式绑定配置中心的环境变量（AutomaticEnv 在 Unmarshal 时不生效）
+	_ = bootstrap.BindEnv("config_center.type", "CONFIG_CENTER_TYPE")
+	_ = bootstrap.BindEnv("config_center.etcd.endpoints", "CONFIG_CENTER_ETCD_ENDPOINTS")
+	_ = bootstrap.BindEnv("config_center.etcd.key", "CONFIG_CENTER_ETCD_KEY")
+	_ = bootstrap.BindEnv("config_center.etcd.timeout", "CONFIG_CENTER_ETCD_TIMEOUT")
+	_ = bootstrap.BindEnv("config_center.etcd.username", "CONFIG_CENTER_ETCD_USERNAME")
+	_ = bootstrap.BindEnv("config_center.etcd.password", "CONFIG_CENTER_ETCD_PASSWORD")
+
+	// endpoints 环境变量是逗号分隔的字符串，需要手动拆分为 []string
+	if envEndpoints, ok := os.LookupEnv("CONFIG_CENTER_ETCD_ENDPOINTS"); ok {
+		bootstrap.Set("config_center.etcd.endpoints", strings.Split(envEndpoints, ","))
 	}
 
 	// 解析引导配置，检查 config_center
