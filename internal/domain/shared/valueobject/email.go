@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dysodeng/app/internal/infrastructure/shared/validator"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/validator"
 )
 
 // Email 邮箱地址值对象

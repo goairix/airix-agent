@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
 // Response api 响应数据结构

@@ -2,7 +2,7 @@ package model
 
 import (
 	sharedVO "github.com/dysodeng/app/internal/domain/shared/valueobject"
-	sharedModel "github.com/dysodeng/app/internal/infrastructure/shared/model"
+	sharedModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
 )
 
 type Admin struct {

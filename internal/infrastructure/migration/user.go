@@ -5,8 +5,8 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/dysodeng/app/internal/infrastructure/persistence/entity/user"
-	"github.com/dysodeng/app/internal/infrastructure/shared/db"
-	"github.com/dysodeng/app/internal/infrastructure/shared/model"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/db"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/model"
 )
 
 var userMigrations = []*gormigrate.Migration{

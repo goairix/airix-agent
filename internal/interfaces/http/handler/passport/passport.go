@@ -7,7 +7,7 @@ import (
 
 	"github.com/dysodeng/app/internal/application/passport/dto/command"
 	"github.com/dysodeng/app/internal/application/passport/service"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 	"github.com/dysodeng/app/internal/interfaces/http/dto/request/passport"
 	"github.com/dysodeng/app/internal/interfaces/http/dto/response/api"
 	"github.com/dysodeng/app/internal/interfaces/http/validator"

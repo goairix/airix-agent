@@ -14,7 +14,7 @@ import (
 	"github.com/dysodeng/app/internal/infrastructure/persistence/entity/file"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/repository"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
-	"github.com/dysodeng/app/internal/infrastructure/shared/storage"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/storage"
 )
 
 type fileRepository struct {

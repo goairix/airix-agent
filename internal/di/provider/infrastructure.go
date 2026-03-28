@@ -11,12 +11,12 @@ import (
 	"github.com/dysodeng/app/internal/infrastructure/event"
 	"github.com/dysodeng/app/internal/infrastructure/migration"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
-	"github.com/dysodeng/app/internal/infrastructure/shared/db"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	"github.com/dysodeng/app/internal/infrastructure/shared/mq"
-	"github.com/dysodeng/app/internal/infrastructure/shared/redis"
-	"github.com/dysodeng/app/internal/infrastructure/shared/storage"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/db"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/mq"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/redis"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/storage"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry"
 )
 
 // ProvideConfig 提供配置

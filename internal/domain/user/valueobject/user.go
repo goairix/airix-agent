@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/dysodeng/app/internal/domain/user/errors"
-	"github.com/dysodeng/app/internal/infrastructure/shared/storage"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/storage"
 )
 
 const (

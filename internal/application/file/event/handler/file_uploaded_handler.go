@@ -5,7 +5,7 @@ import (
 
 	fileEvent "github.com/dysodeng/app/internal/domain/file/event"
 	"github.com/dysodeng/app/internal/infrastructure/event"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
 )
 
 // FileUploadedHandler 文件上传事件处理器

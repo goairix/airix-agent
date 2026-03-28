@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/dysodeng/app/internal/infrastructure/shared/validator"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/validator"
 )
 
 // Telephone 手机号值对象

@@ -13,8 +13,8 @@ import (
 	"github.com/dysodeng/app/internal/domain/user/valueobject"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/entity/user"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
-	sharedModel "github.com/dysodeng/app/internal/infrastructure/shared/model"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	sharedModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
 type userRepository struct {

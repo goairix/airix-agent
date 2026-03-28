@@ -8,10 +8,10 @@ import (
 
 	"github.com/bytedance/sonic"
 
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
-	"github.com/dysodeng/app/internal/infrastructure/shared/websocket"
-	"github.com/dysodeng/app/internal/infrastructure/shared/websocket/message"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/websocket"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/websocket/message"
 )
 
 // SessionManager 全局会话管理器

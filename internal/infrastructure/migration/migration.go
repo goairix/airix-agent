@@ -7,7 +7,7 @@ import (
 
 	"github.com/dysodeng/app/internal/infrastructure/persistence/entity/permission"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
 )
 
 // 定义数据库迁移

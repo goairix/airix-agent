@@ -8,7 +8,7 @@ import (
 
 	domainModel "github.com/dysodeng/app/internal/domain/file/model"
 	domainPort "github.com/dysodeng/app/internal/domain/file/port"
-	infraStorage "github.com/dysodeng/app/internal/infrastructure/shared/storage"
+	infraStorage "github.com/dysodeng/app/internal/infrastructure/pkg/storage"
 )
 
 // StorageAdapter 文件存储端口适配器

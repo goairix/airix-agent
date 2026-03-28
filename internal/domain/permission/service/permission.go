@@ -7,8 +7,8 @@ import (
 	"github.com/dysodeng/app/internal/domain/permission/repository"
 	sharedErrors "github.com/dysodeng/app/internal/domain/shared/errors"
 	sharedVO "github.com/dysodeng/app/internal/domain/shared/valueobject"
-	sharedModel "github.com/dysodeng/app/internal/infrastructure/shared/model"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	sharedModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
 // PermissionDomainService 管理权限领域服务

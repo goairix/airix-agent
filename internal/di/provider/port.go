@@ -8,7 +8,7 @@ import (
 	"github.com/dysodeng/app/internal/infrastructure/config"
 	"github.com/dysodeng/app/internal/infrastructure/event"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
-	"github.com/dysodeng/app/internal/infrastructure/shared/storage"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/storage"
 )
 
 // ProvideFileStoragePort 提供端口适配器：文件存储

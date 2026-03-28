@@ -1,7 +1,7 @@
 package file
 
 import (
-	"github.com/dysodeng/app/internal/infrastructure/shared/model"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/model"
 )
 
 // File 文件记录

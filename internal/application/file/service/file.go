@@ -8,8 +8,8 @@ import (
 	"github.com/dysodeng/app/internal/application/file/dto/response"
 	"github.com/dysodeng/app/internal/domain/file/service"
 	"github.com/dysodeng/app/internal/domain/shared/errors"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
 // FileApplicationService 文件应用服务

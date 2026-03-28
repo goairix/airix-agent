@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/dysodeng/app/internal/infrastructure/config"
-	"github.com/dysodeng/app/internal/infrastructure/shared/websocket"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/websocket"
 	webSocket "github.com/dysodeng/app/internal/interfaces/websocket"
 )
 

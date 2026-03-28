@@ -1,6 +1,6 @@
 package user
 
-import "github.com/dysodeng/app/internal/infrastructure/shared/model"
+import "github.com/dysodeng/app/internal/infrastructure/pkg/model"
 
 type User struct {
 	model.DistributedPrimaryKeyID

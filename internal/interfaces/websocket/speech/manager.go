@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/dysodeng/app/internal/infrastructure/config"
-	"github.com/dysodeng/app/internal/infrastructure/shared/third_party/tts"
-	"github.com/dysodeng/app/internal/infrastructure/shared/third_party/tts/driver"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/third_party/tts"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/third_party/tts/driver"
 )
 
 // Session 语音识别会话

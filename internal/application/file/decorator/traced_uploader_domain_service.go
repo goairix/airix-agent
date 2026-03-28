@@ -6,7 +6,7 @@ import (
 
 	fileModel "github.com/dysodeng/app/internal/domain/file/model"
 	fileDomainSvc "github.com/dysodeng/app/internal/domain/file/service"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
 type TracedUploaderDomainService struct {

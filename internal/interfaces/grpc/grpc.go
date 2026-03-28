@@ -4,7 +4,7 @@ import (
 	"github.com/dysodeng/rpc"
 
 	v1 "github.com/dysodeng/app/api/generated/go/proto/file/v1"
-	"github.com/dysodeng/app/internal/infrastructure/shared/errors"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/errors"
 	"github.com/dysodeng/app/internal/interfaces/grpc/service"
 )
 

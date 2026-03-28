@@ -17,7 +17,7 @@ import (
 	"github.com/dysodeng/app/internal/domain/file/model"
 	filePort "github.com/dysodeng/app/internal/domain/file/port"
 	"github.com/dysodeng/app/internal/domain/file/repository"
-	"github.com/dysodeng/app/internal/infrastructure/shared/helper"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/helper"
 )
 
 // UploaderDomainService 文件上传领域服务

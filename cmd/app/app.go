@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/dysodeng/app/internal/di"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
 	"github.com/dysodeng/app/internal/infrastructure/server"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
 )
 
 type app struct {

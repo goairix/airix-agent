@@ -14,8 +14,8 @@ import (
 	persistCache "github.com/dysodeng/app/internal/infrastructure/persistence/cache"
 	userRepository "github.com/dysodeng/app/internal/infrastructure/persistence/repository/user"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	sharedModel "github.com/dysodeng/app/internal/infrastructure/shared/model"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	sharedModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
 )
 
 // 缓存DTO，避免领域值对象的私有字段导致JSON不完整

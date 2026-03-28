@@ -9,7 +9,7 @@ import (
 	"github.com/redis/go-redis/v9"
 
 	"github.com/dysodeng/app/internal/infrastructure/config"
-	infraRedis "github.com/dysodeng/app/internal/infrastructure/shared/redis"
+	infraRedis "github.com/dysodeng/app/internal/infrastructure/pkg/redis"
 )
 
 // Redis redis驱动

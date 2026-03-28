@@ -18,8 +18,8 @@ import (
 	"github.com/dysodeng/app/internal/domain/file/service"
 	domainEvent "github.com/dysodeng/app/internal/domain/shared/event"
 	sharedPort "github.com/dysodeng/app/internal/domain/shared/port"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
 // UploaderApplicationService 文件上传应用服务

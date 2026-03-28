@@ -5,7 +5,7 @@ import (
 	"unicode"
 
 	"github.com/dysodeng/app/internal/domain/shared/errors"
-	"github.com/dysodeng/app/internal/infrastructure/shared/helper"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/helper"
 )
 
 const (

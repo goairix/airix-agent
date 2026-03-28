@@ -1,6 +1,6 @@
 package permission
 
-import "github.com/dysodeng/app/internal/infrastructure/shared/model"
+import "github.com/dysodeng/app/internal/infrastructure/pkg/model"
 
 // Admin 管理员
 type Admin struct {

@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/dysodeng/app/internal/application/file/service"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 	fileReq "github.com/dysodeng/app/internal/interfaces/http/dto/request/file"
 	"github.com/dysodeng/app/internal/interfaces/http/dto/response/api"
 	"github.com/dysodeng/app/internal/interfaces/http/validator"

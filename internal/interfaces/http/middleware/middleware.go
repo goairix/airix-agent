@@ -10,7 +10,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
 
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/metrics"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/metrics"
 )
 
 // Logger 日志中间件

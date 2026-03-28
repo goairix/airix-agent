@@ -1,6 +1,6 @@
 package websocket
 
-import "github.com/dysodeng/app/internal/infrastructure/shared/websocket"
+import "github.com/dysodeng/app/internal/infrastructure/pkg/websocket"
 
 // WebSocket 消息处理聚合器
 type WebSocket struct {

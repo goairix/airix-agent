@@ -7,7 +7,7 @@ import (
 
 	sharedVO "github.com/dysodeng/app/internal/domain/shared/valueobject"
 	"github.com/dysodeng/app/internal/domain/user/valueobject"
-	sharedModel "github.com/dysodeng/app/internal/infrastructure/shared/model"
+	sharedModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
 )
 
 // User 用户领域模型

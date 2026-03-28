@@ -20,12 +20,12 @@ import (
 	userRepository "github.com/dysodeng/app/internal/domain/user/repository"
 	"github.com/dysodeng/app/internal/domain/user/service"
 	userVO "github.com/dysodeng/app/internal/domain/user/valueobject"
-	"github.com/dysodeng/app/internal/infrastructure/shared/helper"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	"github.com/dysodeng/app/internal/infrastructure/shared/redis"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
-	"github.com/dysodeng/app/internal/infrastructure/shared/token"
-	"github.com/dysodeng/app/internal/infrastructure/shared/wx"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/helper"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/redis"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/token"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/wx"
 )
 
 // PassportApplicationService 认证应用服务

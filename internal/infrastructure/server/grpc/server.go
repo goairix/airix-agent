@@ -15,10 +15,10 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/dysodeng/app/internal/infrastructure/config"
-	"github.com/dysodeng/app/internal/infrastructure/shared/helper"
-	"github.com/dysodeng/app/internal/infrastructure/shared/logger"
-	telemetryMetrics "github.com/dysodeng/app/internal/infrastructure/shared/telemetry/metrics"
-	"github.com/dysodeng/app/internal/infrastructure/shared/telemetry/trace"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/helper"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
+	telemetryMetrics "github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/metrics"
+	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 	GRPC "github.com/dysodeng/app/internal/interfaces/grpc"
 )
 
