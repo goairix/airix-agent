@@ -168,9 +168,9 @@ Agent（聚合根）
     └─ 9. 异步提取记忆 → SessionMemoryStore（领域事件驱动）
 ```
 
-### 2.4 Session 与执行轨迹
+### 2.4 Session 与消息持久化
 
-Session 完整持久化，支持审计和回放：
+Session 完整持久化，支持审计、上下文组装和前端展示。Messages 和执行步骤由独立表存储，Session 聚合根不在内存中持有消息集合。
 
 ```
 Session（聚合根）
@@ -178,22 +178,14 @@ Session（聚合根）
 ├── AgentID / WorkspaceID
 ├── UserID              ← 发起会话的用户，用于关联记忆
 ├── Status（running / interrupted / completed / failed）
-├── Messages[]
-│   ├── Role（user / assistant / tool）
-│   ├── Content
-│   ├── TokenUsage
-│   └── Timestamp
-├── ExecutionTrace[]
-│   ├── StepType（llm_call / tool_call / knowledge_search / skill_invoke / agent_transfer）
-│   ├── Input / Output
-│   ├── Latency
-│   └── Error（如有）
 ├── InterruptState（可选，Status = interrupted 时有值）
 │   ├── InterruptID         ← ADK StatefulInterrupt 的唯一标识，用于 ResumeWithParams
 │   ├── CheckPointData      ← 序列化的 CheckPointStore 快照
 │   └── PendingContext      ← 等待人工输入的上下文描述
 └── TotalTokenUsage
 ```
+
+消息存储见第三章。
 
 ### 2.5 Super Agent 设计
 
@@ -337,13 +329,92 @@ type AgentReleaseRepository interface {
 
 ## 三、上下文与记忆管理
 
-### 3.1 上下文（Context Window）
+### 3.1 消息存储模型
+
+会话消息按三层结构持久化：**Session → Message → MessageItem**。
+
+#### Message（一轮对话）
+
+一"轮"定义为：用户发送 query，经过若干次 LLM 调用、工具调用、知识库检索，直到 LLM 输出最终回复，整个过程为一轮。
+
+```
+Message
+├── id（UUID）
+├── session_id
+├── workspace_id（冗余，便于查询）
+├── agent_id（冗余）
+├── sort_order          ← 填充时间戳，(session_id, sort_order) 联合索引
+├── query               ← 用户原始输入
+├── agent_input         ← Agent 注入的变量参数（jsonb，后续提示词管理设计）
+├── status              ← running / completed / failed / interrupted
+├── total_tokens        ← 整轮 token 合计
+├── input_tokens
+├── output_tokens
+├── cached_tokens
+├── execution_time_ms   ← 整轮执行耗时
+├── first_token_latency_ms
+├── created_at
+└── completed_at
+```
+
+#### MessageItem（轮次内步骤）
+
+一个 Message 对应多个 MessageItem，记录轮次内每个步骤（LLM 回复、工具调用、错误等）。
+
+```
+MessageItem
+├── id（UUID）
+├── message_id
+├── session_id（冗余）
+├── sort_order          ← 应用层自增（从 0 开始），无索引
+│                         取出整个 Message 的 items 后在内存中 sort.Sort 排序
+├── item_type           ← thinking / assistant / tool_call / error
+├── is_final            ← 是否为最终回复（item_type=assistant 时有意义）
+├── content（jsonb）    ← 所有类型的内容统一存于此字段
+├── input_tokens        ← 本次 LLM 调用输入 token（thinking/assistant 时有值）
+├── output_tokens       ← 本次 LLM 调用输出 token
+├── latency_ms          ← 本步骤耗时
+└── created_at
+```
+
+**content 各类型结构：**
+
+```json
+// thinking（模型深度思考内容）
+{ "text": "..." }
+
+// assistant（LLM 回复，含中间回复和最终回复）
+{ "text": "..." }
+
+// tool_call（工具调用，知识库检索同此结构）
+{
+  "tool_name": "search_kb",
+  "tool_call_id": "call_abc123",
+  "arguments": { ... },
+  "result": { ... },
+  "error": "..."
+}
+
+// error
+{ "code": "xxx", "message": "..." }
+```
+
+#### LLM Context 组装规则
+
+按 `message.sort_order` + `message_item.sort_order` 顺序，将 MessageItem 映射为 LLM messages 格式：
+
+- `thinking` → `role: assistant`（thinking block）
+- `assistant` → `role: assistant`
+- `tool_call` → 拆为两条：`role: assistant`（tool_calls）+ `role: tool`（tool result）
+- `error` → 不注入 LLM context，仅用于展示和审计
+
+### 3.2 上下文（Context Window）
 
 上下文是当前会话内传给 LLM 的消息窗口，支持两种策略：
 
 **Sliding Window（默认）**
 
-- 取当前 Session 最近 N 轮的 `user / assistant / tool` 消息
+- 取当前 Session 最近 N 轮 Message 的所有 MessageItem，按顺序组装 LLM messages
 - N 由 Agent 配置的 `ContextWindowSize` 决定
 - 简单高效，适合对话轮次较短的场景
 
@@ -354,7 +425,7 @@ type AgentReleaseRepository interface {
 - 适合长对话、多工具调用的 ReAct / DeepAgent 场景
 - 配置 `SummaryModelInstanceID` 指定摘要专用模型，与推理模型解耦
 
-### 3.2 记忆（Memory）
+### 3.3 记忆（Memory）
 
 记忆分两层，与上下文完全独立：
 
@@ -372,7 +443,7 @@ type AgentReleaseRepository interface {
 - 不主动注入，作为 `memory_search` 工具暴露给 Agent
 - Agent 在 ReAct 循环中按需调用，自主决定何时回忆历史
 
-### 3.3 Memory 实体结构
+### 3.4 Memory 实体结构
 
 ```
 Memory（实体）
@@ -387,7 +458,7 @@ Memory（实体）
 └── CreatedAt / Date    ← 按日期组织
 ```
 
-### 3.4 运行时 Prompt 组装
+### 3.5 运行时 Prompt 组装
 
 ```
 system:    [SystemPrompt] + [GlobalMemory]
@@ -396,7 +467,7 @@ tools:     [...其他工具, memory_search]
 input:     [当前用户输入]
 ```
 
-### 3.5 记忆抽象层
+### 3.6 记忆抽象层
 
 记忆模块做可插拔抽象，不同 Agent 类型使用不同驱动：
 
