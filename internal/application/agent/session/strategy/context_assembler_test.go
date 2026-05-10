@@ -1,10 +1,10 @@
-package service_test
+package strategy_test
 
 import (
 	"sort"
 	"testing"
 
-	appService "github.com/dysodeng/app/internal/application/agent/session/service"
+	"github.com/dysodeng/app/internal/application/agent/session/strategy"
 	"github.com/dysodeng/app/internal/domain/agent/session/model"
 	"github.com/dysodeng/app/internal/domain/agent/session/valueobject"
 )
@@ -15,7 +15,7 @@ func TestMapItemsToMessages_ThinkingAndAssistant(t *testing.T) {
 		{SortOrder: 0, ItemType: valueobject.MessageItemTypeThinking, Content: model.MessageItemContent{Text: "thinking..."}},
 	}
 	sort.Sort(model.ByOrder(items))
-	msgs := appService.MapItemsToMessages(items)
+	msgs := strategy.MapItemsToMessages(items)
 	if len(msgs) != 2 {
 		t.Errorf("expected 2 messages, got %d", len(msgs))
 	}
@@ -30,7 +30,7 @@ func TestMapItemsToMessages_ToolCall(t *testing.T) {
 			Result:     map[string]any{"answer": "42"},
 		}},
 	}
-	msgs := appService.MapItemsToMessages(items)
+	msgs := strategy.MapItemsToMessages(items)
 	// tool_call 拆成两条: assistant(tool_calls) + tool(result)
 	if len(msgs) != 2 {
 		t.Errorf("expected 2 messages for tool_call, got %d", len(msgs))

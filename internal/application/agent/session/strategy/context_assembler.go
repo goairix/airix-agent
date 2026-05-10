@@ -1,4 +1,4 @@
-package service
+package strategy
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 	"github.com/dysodeng/app/internal/domain/agent/session/valueobject"
 )
 
-// ContextAssembler 上下文组装接口（应用层）
+// ContextAssembler 上下文组装接口
 type ContextAssembler interface {
 	// Assemble 组装指定 session 的 LLM 上下文消息列表
 	Assemble(ctx context.Context, sessionID uuid.UUID) ([]*schema.Message, error)

@@ -6,6 +6,7 @@ import (
 	memoryAppService "github.com/dysodeng/app/internal/application/agent/memory/service"
 	appService "github.com/dysodeng/app/internal/application/agent/service"
 	sessionAppService "github.com/dysodeng/app/internal/application/agent/session/service"
+	sessionStrategy "github.com/dysodeng/app/internal/application/agent/session/strategy"
 	domainService "github.com/dysodeng/app/internal/domain/agent/service"
 	agentRepository "github.com/dysodeng/app/internal/infrastructure/persistence/repository/agent"
 	memoryRepository "github.com/dysodeng/app/internal/infrastructure/persistence/repository/agent/memory"
@@ -13,8 +14,6 @@ import (
 )
 
 // AgentModuleSet Agent 模块依赖注入聚合（含 Session/Memory 子域）
-// 注意：SlidingWindowAssembler 不在此注入，因其 windowSize 来自 Agent 运行时配置，
-// 由应用服务在调用时动态构造：sessionAppService.NewSlidingWindowAssembler(cfg.WindowSize, msgRepo, itemRepo)
 var AgentModuleSet = wire.NewSet(
 	// Agent 仓储层
 	agentRepository.NewAgentRepository,
@@ -33,7 +32,9 @@ var AgentModuleSet = wire.NewSet(
 
 	// Session 子域应用层
 	sessionAppService.NewSessionApplicationService,
-	sessionAppService.NewContextAssemblerFactory,
+
+	// Session 子域上下文组装策略
+	sessionStrategy.NewContextAssemblerFactory,
 
 	// Memory 子域仓储层
 	memoryRepository.NewMemoryRepository,
