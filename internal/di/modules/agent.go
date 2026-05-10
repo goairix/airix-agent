@@ -33,6 +33,7 @@ var AgentModuleSet = wire.NewSet(
 
 	// Session 子域应用层
 	sessionAppService.NewSessionApplicationService,
+	sessionAppService.NewContextAssemblerFactory,
 
 	// Memory 子域仓储层
 	memoryRepository.NewMemoryRepository,

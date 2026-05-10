@@ -8,6 +8,7 @@ import (
 	"github.com/cloudwego/eino/schema"
 	"github.com/google/uuid"
 
+	agentModel "github.com/dysodeng/app/internal/domain/agent/model"
 	"github.com/dysodeng/app/internal/domain/agent/session/model"
 	"github.com/dysodeng/app/internal/domain/agent/session/repository"
 	"github.com/dysodeng/app/internal/domain/agent/session/valueobject"
@@ -19,8 +20,36 @@ type ContextAssembler interface {
 	Assemble(ctx context.Context, sessionID uuid.UUID) ([]*schema.Message, error)
 }
 
+// ContextAssemblerFactory 上下文组装器工厂
+// 根据 Agent 的 MemoryConfig 选择组装策略。共享依赖通过 DI 注入，
+// 具体组装器的策略参数由 Agent 配置驱动。
+type ContextAssemblerFactory struct {
+	messageRepo repository.MessageRepository
+	itemRepo    repository.MessageItemRepository
+}
+
+func NewContextAssemblerFactory(
+	messageRepo repository.MessageRepository,
+	itemRepo repository.MessageItemRepository,
+) *ContextAssemblerFactory {
+	return &ContextAssemblerFactory{
+		messageRepo: messageRepo,
+		itemRepo:    itemRepo,
+	}
+}
+
+// Create 根据 Agent 的 MemoryConfig 返回对应的上下文组装器
+func (f *ContextAssemblerFactory) Create(cfg agentModel.MemoryConfig) ContextAssembler {
+	switch cfg.ContextMode {
+	case "sliding_window":
+		return NewSlidingWindowAssembler(cfg.ContextWindowSize, f.messageRepo, f.itemRepo)
+	default:
+		// 默认兜底：滑动窗口
+		return NewSlidingWindowAssembler(cfg.ContextWindowSize, f.messageRepo, f.itemRepo)
+	}
+}
+
 // SlidingWindowAssembler 滑动窗口上下文组装器
-// 注意：windowSize 来自 Agent 配置，不通过 Wire 注入；由应用服务在运行时按 Agent 配置动态构造。
 type SlidingWindowAssembler struct {
 	windowSize  int
 	messageRepo repository.MessageRepository
