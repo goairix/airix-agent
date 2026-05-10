@@ -411,7 +411,7 @@ func (svc *passportApplicationService) amsLogin(ctx context.Context, cmd *comman
 		logger.Error(ctx, passportErrors.ErrAdminUsernameQueryFailed.Message, logger.ErrorField(err))
 		return nil, passportErrors.ErrAdminUsernameQueryFailed.Wrap(err)
 	}
-	if admin == nil || admin.ID <= 0 {
+	if admin == nil || admin.ID == uuid.Nil {
 		return nil, passportErrors.ErrAdminUsernameNotFound
 	}
 

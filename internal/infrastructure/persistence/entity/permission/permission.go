@@ -1,10 +1,14 @@
 package permission
 
-import "github.com/dysodeng/app/internal/infrastructure/pkg/model"
+import (
+	"github.com/google/uuid"
+
+	"github.com/dysodeng/app/internal/infrastructure/pkg/model"
+)
 
 // Admin 管理员
 type Admin struct {
-	model.PrimaryKeyID
+	model.DistributedPrimaryKeyID
 	Username     string `gorm:"index:admin_username_idx,unique;type:varchar(50);not null;default:'';comment:用户名" json:"username"`
 	SafePassword string `gorm:"type:varchar(150);not null;default:;'';comment:登录密码" json:"safe_password"`
 	RealName     string `gorm:"type:varchar(50);not null;default:'';comment:姓名" json:"real_name"`
@@ -21,11 +25,11 @@ func (Admin) TableName() string {
 
 // Permission 权限节点
 type Permission struct {
-	model.PrimaryKeyID
-	Identify string `gorm:"index:permission_idx,unique;type:varchar(100);not null;default:'';comment:权限唯一标识" json:"identify"`
-	Name     string `gorm:"type:varchar(100);not null;default:'';comment:权限名称" json:"name"`
-	ParentID uint64 `gorm:"not null;default:0;comment:权限父级节点ID" json:"parent_id"`
-	Sort     uint   `gorm:"not null;default:0;comment:排序值,越小越靠前" json:"sort"`
+	model.DistributedPrimaryKeyID
+	Identify string    `gorm:"index:permission_idx,unique;type:varchar(100);not null;default:'';comment:权限唯一标识" json:"identify"`
+	Name     string    `gorm:"type:varchar(100);not null;default:'';comment:权限名称" json:"name"`
+	ParentID uuid.UUID `gorm:"type:uuid;not null;comment:权限父级节点ID" json:"parent_id"`
+	Sort     uint      `gorm:"not null;default:0;comment:排序值,越小越靠前" json:"sort"`
 	model.Time
 }
 
@@ -35,9 +39,9 @@ func (Permission) TableName() string {
 
 // AdminHasPermission 管理员拥有的权限
 type AdminHasPermission struct {
-	model.PrimaryKeyID
-	AdminID      uint64 `gorm:"index:admin_has_perm_idx,unique;not null;default:0;comment:管理员ID" json:"admin_id"`
-	PermissionID uint64 `gorm:"index:admin_has_perm_idx,unique;not null;default:0;comment:权限节点ID" json:"permission_id"`
+	model.DistributedPrimaryKeyID
+	AdminID      uuid.UUID `gorm:"type:uuid;index:admin_has_perm_idx,unique;not null;comment:管理员ID" json:"admin_id"`
+	PermissionID uuid.UUID `gorm:"type:uuid;index:admin_has_perm_idx,unique;not null;comment:权限节点ID" json:"permission_id"`
 	model.Time
 }
 

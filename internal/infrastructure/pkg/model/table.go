@@ -7,11 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// PrimaryKeyID 自增主键ID
-type PrimaryKeyID struct {
-	ID uint64 `gorm:"primary_key;autoIncrement" json:"id"`
-}
-
 // DistributedPrimaryKeyID 分布式主键ID
 type DistributedPrimaryKeyID struct {
 	ID uuid.UUID `gorm:"type:uuid;not null;default:uuid_generate_v7();primary_key" json:"id"`

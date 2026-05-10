@@ -7,7 +7,7 @@ import (
 
 // AdminLoginInfo 管理员登录信息
 type AdminLoginInfo struct {
-	AdminID     uint64
+	AdminID     uuid.UUID
 	Username    string
 	IsSuper     bool
 	Permissions []string

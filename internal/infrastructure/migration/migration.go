@@ -6,6 +6,7 @@ import (
 	"github.com/go-gormigrate/gormigrate/v2"
 
 	"github.com/dysodeng/app/internal/infrastructure/persistence/entity/permission"
+	"github.com/dysodeng/app/internal/infrastructure/persistence/entity/workspace"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
 	"github.com/dysodeng/app/internal/infrastructure/pkg/logger"
 )
@@ -88,6 +89,31 @@ func Seed(ctx context.Context, tx transactions.TransactionManager) error {
 		}
 
 		logger.Info(ctx, "创建管理员用户成功")
+	}
+
+	// 检查是否已有工作空间
+	var wsCount int64
+	tx.GetTx(ctx).Model(&workspace.Workspace{}).Count(&wsCount)
+
+	// 如果没有工作空间，就创建默认空间
+	if wsCount == 0 {
+		// 获取超级管理员作为创建人
+		var superAdmin permission.Admin
+		tx.GetTx(ctx).Where("is_super = ?", 1).First(&superAdmin)
+
+		defaultWorkspace := &workspace.Workspace{
+			Name:        "默认空间",
+			Description: "系统默认工作空间",
+			Status:      1,
+			CreatedBy:   superAdmin.ID,
+		}
+
+		if err := tx.GetTx(ctx).Create(defaultWorkspace).Error; err != nil {
+			logger.Error(ctx, "创建默认工作空间失败", logger.ErrorField(err))
+			return err
+		}
+
+		logger.Info(ctx, "创建默认工作空间成功")
 	}
 
 	logger.Info(ctx, "初始数据填充完成")

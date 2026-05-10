@@ -1,12 +1,14 @@
 package model
 
 import (
+	"github.com/google/uuid"
+
 	sharedVO "github.com/dysodeng/app/internal/domain/shared/valueobject"
 	sharedModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
 )
 
 type Admin struct {
-	ID           uint64
+	ID           uuid.UUID
 	Username     sharedVO.Username
 	SafePassword sharedVO.Password
 	RealName     string

@@ -3,6 +3,7 @@ package permission
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 
@@ -26,7 +27,7 @@ func NewAdminRepository(txManager transactions.TransactionManager) repository.Ad
 	}
 }
 
-func (repo *adminRepository) FindById(ctx context.Context, id uint64) (*model.Admin, error) {
+func (repo *adminRepository) FindById(ctx context.Context, id uuid.UUID) (*model.Admin, error) {
 	spanCtx, span := trace.Tracer().Start(ctx, repo.baseTraceSpanName+".FindById")
 	defer span.End()
 
@@ -71,14 +72,14 @@ func (repo *adminRepository) ExistsByUsername(ctx context.Context, username shar
 		}
 	}
 
-	return info.ID > 0, nil
+	return info.ID != uuid.Nil, nil
 }
 
 func (repo *adminRepository) Save(ctx context.Context, admin *model.Admin) error {
 	return nil
 }
 
-func (repo *adminRepository) ChangePassword(ctx context.Context, id uint64, password sharedVO.Password) error {
+func (repo *adminRepository) ChangePassword(ctx context.Context, id uuid.UUID, password sharedVO.Password) error {
 	spanCtx, span := trace.Tracer().Start(ctx, repo.baseTraceSpanName+".ChangePassword")
 	defer span.End()
 	tx := repo.txManager.GetTx(spanCtx).Model(&permission.Admin{}).Debug()
