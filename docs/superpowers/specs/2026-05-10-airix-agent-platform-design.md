@@ -175,17 +175,25 @@ Session 完整持久化，支持审计、上下文组装和前端展示。Messag
 ```
 Session（聚合根）
 ├── SessionID
-├── AgentID / WorkspaceID
-├── UserID              ← 发起会话的用户，用于关联记忆
-├── Status（running / interrupted / completed / failed）
+├── WorkspaceID
+├── AgentID
+├── ReleaseID               ← 运行时使用的 AgentRelease 版本
+├── UserID                  ← 发起会话的用户，用于关联记忆
+├── Title                   ← 会话标题（可选，前端展示用）
+├── Status                  ← running / interrupted / completed / failed
+├── TotalTokenUsage
+│   ├── InputTokens
+│   ├── OutputTokens
+│   └── CachedTokens
 ├── InterruptState（可选，Status = interrupted 时有值）
 │   ├── InterruptID         ← ADK StatefulInterrupt 的唯一标识，用于 ResumeWithParams
 │   ├── CheckPointData      ← 序列化的 CheckPointStore 快照
 │   └── PendingContext      ← 等待人工输入的上下文描述
-└── TotalTokenUsage
+├── CreatedAt
+└── UpdatedAt
 ```
 
-消息存储见第三章。
+消息存储结构见第三章 3.1 节。
 
 ### 2.5 Super Agent 设计
 
