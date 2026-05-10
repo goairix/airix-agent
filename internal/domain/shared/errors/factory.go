@@ -10,6 +10,8 @@ const (
 	DomainPermission = "permission"
 	DomainWorkspace  = "workspace"
 	DomainAgent      = "agent"
+	DomainSession    = "session"
+	DomainMemory     = "memory"
 )
 
 // NewCommonError 创建通用领域错误
@@ -49,4 +51,14 @@ func NewWorkspaceError(code, message string, err error) *DomainError {
 // NewAgentError 创建 Agent 领域错误
 func NewAgentError(code, message string, err error) *DomainError {
 	return NewDomainError(DomainAgent, code, message, err)
+}
+
+// NewSessionError 创建 Session 领域错误
+func NewSessionError(code, message string, err error) *DomainError {
+	return NewDomainError(DomainSession, code, message, err)
+}
+
+// NewMemoryError 创建 Memory 领域错误
+func NewMemoryError(code, message string, err error) *DomainError {
+	return NewDomainError(DomainMemory, code, message, err)
 }
