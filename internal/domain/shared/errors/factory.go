@@ -9,6 +9,7 @@ const (
 	DomainPassport   = "passport"
 	DomainPermission = "permission"
 	DomainWorkspace  = "workspace"
+	DomainAgent      = "agent"
 )
 
 // NewCommonError 创建通用领域错误
@@ -43,4 +44,9 @@ func NewPermissionError(code, message string, err error) *DomainError {
 // NewWorkspaceError 创建工作空间领域错误
 func NewWorkspaceError(code, message string, err error) *DomainError {
 	return NewDomainError(DomainWorkspace, code, message, err)
+}
+
+// NewAgentError 创建 Agent 领域错误
+func NewAgentError(code, message string, err error) *DomainError {
+	return NewDomainError(DomainAgent, code, message, err)
 }
