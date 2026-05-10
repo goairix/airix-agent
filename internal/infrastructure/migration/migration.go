@@ -17,6 +17,7 @@ func margeMigrations() {
 	migrations = append(migrations, permissionMigrations...)
 	migrations = append(migrations, userMigrations...)
 	migrations = append(migrations, fileMigrations...)
+	migrations = append(migrations, workspaceMigrations...)
 }
 
 // Migrate 执行数据库迁移
