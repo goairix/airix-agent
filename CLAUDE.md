@@ -129,6 +129,7 @@ GORM 数据实体字段 tag 必须包含 `type`、`not null`、`comment`。
 - 领域模型实体提供 `Validate()` 方法做自身业务规则校验
 - 每个服务结构体包含 `baseTraceSpanName` 字段，格式 `<层>.<模块>.service.<ServiceName>`，每个方法入口创建 span
 - 构造函数命名 `NewXxxService`，入参为接口类型，返回值为接口类型
+- 定义类型时，必要的注释要加上
 
 ## DDD 约束
 
