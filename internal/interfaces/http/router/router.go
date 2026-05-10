@@ -24,6 +24,19 @@ func RegisterRouter(router *gin.Engine, registry *http.HandlerRegistry) {
 			file.POST("upload/multipart/complete", registry.UploaderHandler.CompleteMultipartUpload)
 			file.POST("upload/multipart/status", registry.UploaderHandler.MultipartUploadStatus)
 		}
+
+		// 工作空间管理
+		ws := api.Group("workspaces")
+		{
+			ws.POST("", registry.WorkspaceHandler.CreateWorkspace)
+			ws.GET("", registry.WorkspaceHandler.ListWorkspaces)
+			ws.GET(":id", registry.WorkspaceHandler.GetWorkspace)
+			ws.PUT(":id/disable", registry.WorkspaceHandler.DisableWorkspace)
+			ws.PUT(":id/enable", registry.WorkspaceHandler.EnableWorkspace)
+			ws.GET(":id/members", registry.WorkspaceHandler.ListMembers)
+			ws.POST(":id/members", registry.WorkspaceHandler.AssignAdmin)
+			ws.DELETE(":id/members/:userId", registry.WorkspaceHandler.RevokeAdmin)
+		}
 	}
 
 	// 健康检查

@@ -12,17 +12,21 @@ import (
 	"github.com/dysodeng/app/internal/application/file/event/handler"
 	service3 "github.com/dysodeng/app/internal/application/file/service"
 	service2 "github.com/dysodeng/app/internal/application/passport/service"
+	service5 "github.com/dysodeng/app/internal/application/workspace/service"
 	"github.com/dysodeng/app/internal/di/event"
 	"github.com/dysodeng/app/internal/di/provider"
 	"github.com/dysodeng/app/internal/domain/user/service"
+	service4 "github.com/dysodeng/app/internal/domain/workspace/service"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/repository/cache"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/repository/file"
 	"github.com/dysodeng/app/internal/infrastructure/persistence/repository/permission"
+	"github.com/dysodeng/app/internal/infrastructure/persistence/repository/workspace"
 	"github.com/dysodeng/app/internal/interfaces/grpc"
-	service4 "github.com/dysodeng/app/internal/interfaces/grpc/service"
+	service6 "github.com/dysodeng/app/internal/interfaces/grpc/service"
 	"github.com/dysodeng/app/internal/interfaces/http"
 	file2 "github.com/dysodeng/app/internal/interfaces/http/handler/file"
 	"github.com/dysodeng/app/internal/interfaces/http/handler/passport"
+	workspace2 "github.com/dysodeng/app/internal/interfaces/http/handler/workspace"
 	"github.com/dysodeng/app/internal/interfaces/websocket"
 )
 
@@ -73,7 +77,11 @@ func InitApp(ctx context.Context) (*App, error) {
 	portTransactionManager := provider.ProvideTransactionManagerPort(transactionManager)
 	uploaderApplicationService := service3.NewUploaderApplicationService(uploaderDomainService, eventPublisher, portTransactionManager, fileRepository, uploaderRepository, fileStorage)
 	uploaderHandler := file2.NewUploaderHandler(uploaderApplicationService)
-	handlerRegistry := http.NewHandlerRegistry(passportHandler, uploaderHandler)
+	repository := workspace.NewWorkspaceRepository(transactionManager)
+	serviceService := service4.NewWorkspaceDomainService(repository)
+	service7 := service5.NewWorkspaceApplicationService(serviceService)
+	workspaceHandler := workspace2.NewWorkspaceHandler(service7)
+	handlerRegistry := http.NewHandlerRegistry(passportHandler, uploaderHandler, workspaceHandler)
 	textMessageHandler := websocket.NewTextMessageHandler()
 	binaryMessageHandler := websocket.NewBinaryMessageHandler()
 	webSocket := websocket.NewWebSocket(textMessageHandler, binaryMessageHandler)
@@ -81,7 +89,7 @@ func InitApp(ctx context.Context) (*App, error) {
 	eventHandlerRegistry := event.NewHandlerRegistry(fileUploadedHandler)
 	fileDomainService := decorator.NewFileDomainServiceWithTracing(fileRepository)
 	fileApplicationService := service3.NewFileApplicationService(fileDomainService)
-	fileService := service4.NewFileService(fileApplicationService)
+	fileService := service6.NewFileService(fileApplicationService)
 	serviceRegistry := grpc.NewServiceRegistry(fileService)
 	server := provider.ProvideHTTPServer(config, handlerRegistry)
 	grpcServer := provider.ProvideGRPCServer(ctx, config, serviceRegistry)
