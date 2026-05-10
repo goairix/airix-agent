@@ -14,4 +14,5 @@ var ModulesSet = wire.NewSet(
 	modules.PassportModuleSet,
 	modules.FileModuleSet,
 	modules.WorkspaceModuleSet,
+	modules.AgentModuleSet,
 )
