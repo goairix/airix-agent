@@ -336,6 +336,7 @@ type Session struct {
     InterruptState  *InterruptState
     CreatedAt      time.Time
     UpdatedAt      time.Time
+    CompletedAt    *time.Time
 }
 
 func NewSession(workspaceID, agentID, userID uuid.UUID, releaseID, title string) (*Session, error) {
@@ -417,6 +418,19 @@ func NewMessage(sessionID, workspaceID, agentID uuid.UUID, query string, sortOrd
         Query:       query,
         Status:      valueobject.MessageStatusRunning,
         CreatedAt:   time.Now(),
+    }
+}
+
+func NewMessageItem(messageID, sessionID uuid.UUID, sortOrder int, itemType valueobject.MessageItemType, content MessageItemContent) *MessageItem {
+    id, _ := uuid.NewV7()
+    return &MessageItem{
+        ID:        id,
+        MessageID: messageID,
+        SessionID: sessionID,
+        SortOrder: sortOrder,
+        ItemType:  itemType,
+        Content:   content,
+        CreatedAt: time.Now(),
     }
 }
 ```
@@ -701,6 +715,8 @@ git commit -m "feat(session): 新增 Session 仓储接口和领域事件"
 package session
 
 import (
+    "time"
+
     "github.com/google/uuid"
 
     "github.com/dysodeng/app/internal/infrastructure/pkg/model"
@@ -709,16 +725,17 @@ import (
 // Session 会话数据实体
 type Session struct {
     model.DistributedPrimaryKeyID
-    WorkspaceID    uuid.UUID `gorm:"type:uuid;not null;index:session_workspace_idx;comment:工作空间ID"`
-    AgentID        uuid.UUID `gorm:"type:uuid;not null;index:session_agent_idx;comment:AgentID"`
-    ReleaseID      string    `gorm:"type:varchar(20);not null;default:'';comment:发布版本ID"`
-    UserID         uuid.UUID `gorm:"type:uuid;not null;index:session_user_idx;comment:用户ID"`
-    Title          string    `gorm:"type:varchar(255);not null;default:'';comment:会话标题"`
-    Status         uint8     `gorm:"type:tinyint(3);not null;default:1;comment:状态 1-运行中 2-中断 3-完成 4-失败"`
-    InputTokens    int64     `gorm:"type:bigint;not null;default:0;comment:总输入token"`
-    OutputTokens   int64     `gorm:"type:bigint;not null;default:0;comment:总输出token"`
-    CachedTokens   int64     `gorm:"type:bigint;not null;default:0;comment:总缓存token"`
-    InterruptState string    `gorm:"type:json;comment:中断状态JSON"`
+    WorkspaceID    uuid.UUID  `gorm:"type:uuid;not null;index:session_workspace_idx;comment:工作空间ID"`
+    AgentID        uuid.UUID  `gorm:"type:uuid;not null;index:session_agent_idx;comment:AgentID"`
+    ReleaseID      string     `gorm:"type:varchar(20);not null;default:'';comment:发布版本ID"`
+    UserID         uuid.UUID  `gorm:"type:uuid;not null;index:session_user_idx;comment:用户ID"`
+    Title          string     `gorm:"type:varchar(255);not null;default:'';comment:会话标题"`
+    Status         uint8      `gorm:"type:tinyint(3);not null;default:1;comment:状态 1-运行中 2-中断 3-完成 4-失败"`
+    InputTokens    int64      `gorm:"type:bigint;not null;default:0;comment:总输入token"`
+    OutputTokens   int64      `gorm:"type:bigint;not null;default:0;comment:总输出token"`
+    CachedTokens   int64      `gorm:"type:bigint;not null;default:0;comment:总缓存token"`
+    InterruptState string     `gorm:"type:json;comment:中断状态JSON"`
+    CompletedAt    *time.Time `gorm:"type:timestamp(0) without time zone;comment:完成时间"`
     model.Time
     model.SoftDelete
 }
@@ -909,6 +926,7 @@ import (
     "github.com/dysodeng/app/internal/domain/session/valueobject"
     sessionEntity "github.com/dysodeng/app/internal/infrastructure/persistence/entity/session"
     "github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
+    pkgModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
     "github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
@@ -994,7 +1012,7 @@ func (repo *sessionRepository) toEntity(s *sessionModel.Session) (*sessionEntity
         interruptJSON = string(b)
     }
     return &sessionEntity.Session{
-        DistributedPrimaryKeyID: pkgModel(s.ID),
+        DistributedPrimaryKeyID: pkgModel.DistributedPrimaryKeyID{ID: s.ID},
         WorkspaceID:             s.WorkspaceID,
         AgentID:                 s.AgentID,
         ReleaseID:               s.ReleaseID,
@@ -1036,8 +1054,6 @@ func (repo *sessionRepository) fromEntity(e *sessionEntity.Session) (*sessionMod
 }
 ```
 
-> 注意：`pkgModel(s.ID)` 是辅助函数，参照 agent 仓储实现中的写法构造 `model.DistributedPrimaryKeyID{ID: id}`。
-
 - [ ] **Step 2: 创建 repository/session/message.go**
 
 ```go
@@ -1056,6 +1072,7 @@ import (
     "github.com/dysodeng/app/internal/domain/session/valueobject"
     sessionEntity "github.com/dysodeng/app/internal/infrastructure/persistence/entity/session"
     "github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
+    pkgModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
     "github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
@@ -1159,7 +1176,7 @@ func (repo *messageRepository) toEntity(m *sessionModel.Message) (*sessionEntity
         agentInputJSON = string(b)
     }
     return &sessionEntity.Message{
-        DistributedPrimaryKeyID: pkgModel(m.ID),
+        DistributedPrimaryKeyID: pkgModel.DistributedPrimaryKeyID{ID: m.ID},
         SessionID:               m.SessionID,
         WorkspaceID:             m.WorkspaceID,
         AgentID:                 m.AgentID,
@@ -1223,6 +1240,7 @@ import (
     "github.com/dysodeng/app/internal/domain/session/valueobject"
     sessionEntity "github.com/dysodeng/app/internal/infrastructure/persistence/entity/session"
     "github.com/dysodeng/app/internal/infrastructure/persistence/transactions"
+    pkgModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
     "github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
@@ -1283,7 +1301,7 @@ func (repo *messageItemRepository) toEntity(item *sessionModel.MessageItem) (*se
         return nil, err
     }
     return &sessionEntity.MessageItem{
-        DistributedPrimaryKeyID: pkgModel(item.ID),
+        DistributedPrimaryKeyID: pkgModel.DistributedPrimaryKeyID{ID: item.ID},
         MessageID:               item.MessageID,
         SessionID:               item.SessionID,
         SortOrder:               item.SortOrder,
@@ -1318,31 +1336,14 @@ func (repo *messageItemRepository) fromEntity(e *sessionEntity.MessageItem) (*se
 }
 ```
 
-- [ ] **Step 4: 在同包下添加辅助函数**
-
-新建 `internal/infrastructure/persistence/repository/session/helper.go`：
-
-```go
-package session
-
-import (
-    "github.com/google/uuid"
-    pkgModel "github.com/dysodeng/app/internal/infrastructure/pkg/model"
-)
-
-func pkgModel(id uuid.UUID) pkgModel.DistributedPrimaryKeyID {
-    return pkgModel.DistributedPrimaryKeyID{ID: id}
-}
-```
-
-- [ ] **Step 5: 验证编译**
+- [ ] **Step 4: 验证编译**
 
 ```bash
 go build ./internal/infrastructure/persistence/repository/session/...
 ```
 Expected: 无报错
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add internal/infrastructure/persistence/repository/session/
@@ -1351,41 +1352,42 @@ git commit -m "feat(session): 新增 Session/Message/MessageItem GORM 仓储实�
 
 ---
 
-### Task 8: 上下文组装领域服务
+### Task 8: 上下文组装应用服务
 
 **Files:**
-- Create: `internal/domain/session/service/context_assembler.go`
+- Create: `internal/application/session/service/context_assembler.go`
+
+> 注意：上下文组装涉及 Eino `schema.Message` 类型，属于基础设施依赖，不能放入领域层。本 Task 将 `ContextAssembler` 接口和 `MapItemsToMessages` 函数放在应用层，领域层只负责返回纯 Go 的 `[]*model.MessageItem`。
 
 - [ ] **Step 1: 写失败测试**
 
-新建 `internal/domain/session/service/context_assembler_test.go`：
+新建 `internal/application/session/service/context_assembler_test.go`：
 
 ```go
 package service_test
 
 import (
-    "context"
     "sort"
     "testing"
 
     "github.com/dysodeng/app/internal/domain/session/model"
-    "github.com/dysodeng/app/internal/domain/session/service"
     "github.com/dysodeng/app/internal/domain/session/valueobject"
+    appService "github.com/dysodeng/app/internal/application/session/service"
 )
 
-func TestAssembleFromItems_SlidingWindow(t *testing.T) {
+func TestMapItemsToMessages_ThinkingAndAssistant(t *testing.T) {
     items := []*model.MessageItem{
         {SortOrder: 1, ItemType: valueobject.MessageItemTypeAssistant, Content: model.MessageItemContent{Text: "hello"}, IsFinal: true},
         {SortOrder: 0, ItemType: valueobject.MessageItemTypeThinking, Content: model.MessageItemContent{Text: "thinking..."}},
     }
     sort.Sort(model.ByOrder(items))
-    msgs := service.MapItemsToMessages(items)
+    msgs := appService.MapItemsToMessages(items)
     if len(msgs) != 2 {
         t.Errorf("expected 2 messages, got %d", len(msgs))
     }
 }
 
-func TestAssembleFromItems_ToolCall(t *testing.T) {
+func TestMapItemsToMessages_ToolCall(t *testing.T) {
     items := []*model.MessageItem{
         {SortOrder: 0, ItemType: valueobject.MessageItemTypeToolCall, Content: model.MessageItemContent{
             ToolName:   "search",
@@ -1394,24 +1396,18 @@ func TestAssembleFromItems_ToolCall(t *testing.T) {
             Result:     map[string]any{"answer": "42"},
         }},
     }
-    msgs := service.MapItemsToMessages(items)
+    msgs := appService.MapItemsToMessages(items)
     // tool_call 拆成两条: assistant(tool_calls) + tool(result)
     if len(msgs) != 2 {
         t.Errorf("expected 2 messages for tool_call, got %d", len(msgs))
     }
-}
-
-func TestContextAssembler_Assemble(t *testing.T) {
-    // 验证接口签名存在
-    var _ service.ContextAssembler = (*service.SlidingWindowAssembler)(nil)
-    _ = context.Background()
 }
 ```
 
 - [ ] **Step 2: 运行验证失败**
 
 ```bash
-go test ./internal/domain/session/service/...
+go test ./internal/application/session/service/...
 ```
 Expected: FAIL — package not found
 
@@ -1433,15 +1429,16 @@ import (
     "github.com/dysodeng/app/internal/domain/session/valueobject"
 )
 
-// ContextAssembler 上下文组装接口
+// ContextAssembler 上下文组装接口（应用层）
 type ContextAssembler interface {
     // Assemble 组装指定 session 的 LLM 上下文消息列表
     Assemble(ctx context.Context, sessionID uuid.UUID) ([]*schema.Message, error)
 }
 
 // SlidingWindowAssembler 滑动窗口上下文组装器
+// 注意：windowSize 来自 Agent 配置，不通过 Wire 注入；由应用服务在运行时按 Agent 配置动态构造。
 type SlidingWindowAssembler struct {
-    windowSize  int // 保留最近 N 轮
+    windowSize  int
     messageRepo repository.MessageRepository
     itemRepo    repository.MessageItemRepository
 }
@@ -1465,9 +1462,7 @@ func (a *SlidingWindowAssembler) Assemble(ctx context.Context, sessionID uuid.UU
     }
     var result []*schema.Message
     for _, msg := range messages {
-        // 每轮首先注入用户消息
         result = append(result, schema.UserMessage(msg.Query))
-        // 取该轮所有步骤，内存排序
         items, err := a.itemRepo.ListByMessage(ctx, msg.ID)
         if err != nil {
             return nil, err
@@ -1489,7 +1484,6 @@ func MapItemsToMessages(items []*model.MessageItem) []*schema.Message {
         case valueobject.MessageItemTypeAssistant:
             msgs = append(msgs, schema.AssistantMessage(item.Content.Text, nil))
         case valueobject.MessageItemTypeToolCall:
-            // assistant 侧：包含 tool_calls 声明
             toolCallJSON, _ := json.Marshal(item.Content.Arguments)
             assistantMsg := &schema.Message{
                 Role: schema.Assistant,
@@ -1505,7 +1499,6 @@ func MapItemsToMessages(items []*model.MessageItem) []*schema.Message {
                 },
             }
             msgs = append(msgs, assistantMsg)
-            // tool 侧：工具返回结果
             resultJSON, _ := json.Marshal(item.Content.Result)
             if item.Content.Error != "" {
                 resultJSON, _ = json.Marshal(map[string]string{"error": item.Content.Error})
@@ -1523,18 +1516,19 @@ func MapItemsToMessages(items []*model.MessageItem) []*schema.Message {
 - [ ] **Step 4: 运行测试验证通过**
 
 ```bash
-go test ./internal/domain/session/service/...
+go test ./internal/application/session/service/...
 ```
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add internal/domain/session/service/
-git commit -m "feat(session): 新增滑动窗口上下文组装领域服务"
+git add internal/application/session/service/context_assembler.go internal/application/session/service/context_assembler_test.go
+git commit -m "feat(session): 新增滑动窗口上下文组装应用服务"
 ```
 
 ---
+
 
 ### Task 9: Memory 领域层
 
@@ -1603,12 +1597,27 @@ type Memory struct {
     WorkspaceID uuid.UUID
     UserID      uuid.UUID
     MemoryType  valueobject.MemoryType
-    SessionID   uuid.UUID // session 类型时有值
+    AgentID     uuid.UUID // session 类型时有值（会话记忆按 Agent+User 区分，跨会话持久）
     Content     string    // 结构化摘要或自然语言片段
     Tags        []string  // 检索标签
     Importance  float64   // 重要性评分，影响检索排序
     Date        time.Time // 按日期组织
     CreatedAt   time.Time
+}
+
+func NewMemory(workspaceID, userID uuid.UUID, memoryType valueobject.MemoryType, content string, tags []string, importance float64) *Memory {
+    id, _ := uuid.NewV7()
+    return &Memory{
+        ID:          id,
+        WorkspaceID: workspaceID,
+        UserID:      userID,
+        MemoryType:  memoryType,
+        Content:     content,
+        Tags:        tags,
+        Importance:  importance,
+        Date:        time.Now(),
+        CreatedAt:   time.Now(),
+    }
 }
 ```
 
@@ -1650,7 +1659,10 @@ import (
 type MemoryRepository interface {
     Save(ctx context.Context, memory *model.Memory) error
     ListByUserAndDate(ctx context.Context, workspaceID, userID uuid.UUID, date time.Time) ([]model.Memory, error)
-    DeleteBySession(ctx context.Context, sessionID uuid.UUID) error
+    // ListByAgentUser 查询某 agent+用户的所有会话记忆（session 类型）
+    ListByAgentUser(ctx context.Context, workspaceID, agentID, userID uuid.UUID) ([]model.Memory, error)
+    // DeleteByAgentUser 清除指定 agent+用户的所有会话记忆（session 类型）
+    DeleteByAgentUser(ctx context.Context, workspaceID, agentID, userID uuid.UUID) error
 }
 ```
 
@@ -1668,10 +1680,11 @@ import (
     "github.com/dysodeng/app/internal/domain/memory/model"
 )
 
-// SearchOptions 记忆检索选项
+// SearchOptions 会话记忆检索选项
 type SearchOptions struct {
     TopK        int
     WorkspaceID uuid.UUID
+    AgentID     uuid.UUID // 会话记忆按 Agent+User 区分
     UserID      uuid.UUID
 }
 
@@ -1764,13 +1777,14 @@ type Memory struct {
     model.DistributedPrimaryKeyID
     WorkspaceID uuid.UUID `gorm:"type:uuid;not null;index:memory_user_idx,priority:1;comment:工作空间ID"`
     UserID      uuid.UUID `gorm:"type:uuid;not null;index:memory_user_idx,priority:2;comment:用户ID"`
-    MemoryType  uint8     `gorm:"type:tinyint(3);not null;comment:记忆类型 1-session 2-global"`
-    SessionID   uuid.UUID `gorm:"type:uuid;comment:会话ID(session类型时有值)"`
+    MemoryType  uint8     `gorm:"type:tinyint(3);not null;index:memory_user_idx,priority:4;comment:记忆类型 1-session 2-global"`
+    AgentID     uuid.UUID `gorm:"type:uuid;index:memory_agent_idx;comment:AgentID(session类型时有值，会话记忆按Agent+User区分)"`
     Content     string    `gorm:"type:text;not null;comment:记忆内容"`
     Tags        string    `gorm:"type:json;comment:标签JSON"`
     Importance  float64   `gorm:"type:decimal(4,2);not null;default:0;comment:重要性评分"`
     Date        time.Time `gorm:"type:date;not null;index:memory_user_idx,priority:3;comment:记忆日期"`
     model.Time
+    model.SoftDelete
 }
 
 func (Memory) TableName() string { return "memories" }
@@ -1872,11 +1886,24 @@ func (repo *memoryRepository) ListByUserAndDate(ctx context.Context, workspaceID
     return repo.fromEntities(entities)
 }
 
-func (repo *memoryRepository) DeleteBySession(ctx context.Context, sessionID uuid.UUID) error {
-    spanCtx, span := trace.Tracer().Start(ctx, repo.baseTraceSpanName+".DeleteBySession")
+func (repo *memoryRepository) ListByAgentUser(ctx context.Context, workspaceID, agentID, userID uuid.UUID) ([]memoryModel.Memory, error) {
+    spanCtx, span := trace.Tracer().Start(ctx, repo.baseTraceSpanName+".ListByAgentUser")
+    defer span.End()
+    var entities []memoryEntity.Memory
+    if err := repo.txManager.GetTx(spanCtx).
+        Where("workspace_id = ? AND agent_id = ? AND user_id = ? AND memory_type = ?", workspaceID, agentID, userID, 1).
+        Find(&entities).Error; err != nil {
+        return nil, err
+    }
+    return repo.fromEntities(entities)
+}
+
+func (repo *memoryRepository) DeleteByAgentUser(ctx context.Context, workspaceID, agentID, userID uuid.UUID) error {
+    spanCtx, span := trace.Tracer().Start(ctx, repo.baseTraceSpanName+".DeleteByAgentUser")
     defer span.End()
     return repo.txManager.GetTx(spanCtx).
-        Where("session_id = ?", sessionID).Delete(&memoryEntity.Memory{}).Error
+        Where("workspace_id = ? AND agent_id = ? AND user_id = ? AND memory_type = ?", workspaceID, agentID, userID, 1).
+        Delete(&memoryEntity.Memory{}).Error
 }
 
 func (repo *memoryRepository) toEntity(m *memoryModel.Memory) (*memoryEntity.Memory, error) {
@@ -1889,7 +1916,7 @@ func (repo *memoryRepository) toEntity(m *memoryModel.Memory) (*memoryEntity.Mem
         WorkspaceID:             m.WorkspaceID,
         UserID:                  m.UserID,
         MemoryType:              m.MemoryType.Uint8(),
-        SessionID:               m.SessionID,
+        AgentID:                 m.AgentID,
         Content:                 m.Content,
         Tags:                    string(tagsJSON),
         Importance:              m.Importance,
@@ -1909,7 +1936,7 @@ func (repo *memoryRepository) fromEntities(entities []memoryEntity.Memory) ([]me
             WorkspaceID: e.WorkspaceID,
             UserID:      e.UserID,
             MemoryType:  valueobject.MemoryType(e.MemoryType),
-            SessionID:   e.SessionID,
+            AgentID:     e.AgentID,
             Content:     e.Content,
             Tags:        tags,
             Importance:  e.Importance,
@@ -2007,13 +2034,13 @@ package service
 
 import (
     "context"
-    "errors"
     "time"
 
     "github.com/google/uuid"
 
     "github.com/dysodeng/app/internal/application/session/dto/command"
     "github.com/dysodeng/app/internal/application/session/dto/response"
+    sessionErrors "github.com/dysodeng/app/internal/domain/session/errors"
     sessionModel "github.com/dysodeng/app/internal/domain/session/model"
     "github.com/dysodeng/app/internal/domain/session/repository"
     "github.com/dysodeng/app/internal/domain/session/valueobject"
@@ -2088,7 +2115,7 @@ func (svc *sessionApplicationService) GetSession(ctx context.Context, sessionID 
         return nil, err
     }
     if session == nil {
-        return nil, errors.New("会话不存在")
+        return nil, sessionErrors.ErrSessionNotFound
     }
     return toSessionResponse(session), nil
 }
@@ -2102,8 +2129,12 @@ func (svc *sessionApplicationService) CreateMessage(ctx context.Context, session
         return nil, errors.New("会话 ID 格式错误")
     }
     session, err := svc.sessionRepo.FindByID(spanCtx, sid)
-    if err != nil || session == nil {
-        return nil, errors.New("会话不存在")
+    if err != nil {
+        logger.Error(spanCtx, err.Error(), logger.ErrorField(err))
+        return nil, err
+    }
+    if session == nil {
+        return nil, sessionErrors.ErrSessionNotFound
     }
     msg := sessionModel.NewMessage(session.ID, session.WorkspaceID, session.AgentID, query, time.Now().UnixMilli())
     msg.AgentInput = agentInput
@@ -2123,8 +2154,12 @@ func (svc *sessionApplicationService) CompleteMessage(ctx context.Context, cmd *
         return errors.New("消息 ID 格式错误")
     }
     msg, err := svc.messageRepo.FindByID(spanCtx, msgID)
-    if err != nil || msg == nil {
-        return errors.New("消息不存在")
+    if err != nil {
+        logger.Error(spanCtx, err.Error(), logger.ErrorField(err))
+        return err
+    }
+    if msg == nil {
+        return sessionErrors.ErrMessageQueryFailed
     }
     now := time.Now()
     msg.Status = valueobject.MessageStatusCompleted
@@ -2201,6 +2236,7 @@ type MemoryResponse struct {
     MemoryID    string    `json:"memory_id"`
     WorkspaceID string    `json:"workspace_id"`
     UserID      string    `json:"user_id"`
+    AgentID     string    `json:"agent_id"`
     MemoryType  string    `json:"memory_type"`
     Content     string    `json:"content"`
     Tags        []string  `json:"tags"`
@@ -2232,7 +2268,7 @@ import (
 
 // Service Memory 应用服务接口
 type Service interface {
-    SaveMemory(ctx context.Context, workspaceID, userID, sessionID, content string, memoryType uint8, tags []string, importance float64) (*response.MemoryResponse, error)
+    SaveMemory(ctx context.Context, workspaceID, userID, agentID, content string, memoryType uint8, tags []string, importance float64) (*response.MemoryResponse, error)
     ListByDate(ctx context.Context, workspaceID, userID string, date time.Time) ([]response.MemoryResponse, error)
 }
 
@@ -2248,7 +2284,7 @@ func NewMemoryApplicationService(memoryRepo repository.MemoryRepository) Service
     }
 }
 
-func (svc *memoryApplicationService) SaveMemory(ctx context.Context, workspaceID, userID, sessionID, content string, memoryType uint8, tags []string, importance float64) (*response.MemoryResponse, error) {
+func (svc *memoryApplicationService) SaveMemory(ctx context.Context, workspaceID, userID, agentID, content string, memoryType uint8, tags []string, importance float64) (*response.MemoryResponse, error) {
     spanCtx, span := trace.Tracer().Start(ctx, svc.baseTraceSpanName+".SaveMemory")
     defer span.End()
 
@@ -2261,24 +2297,14 @@ func (svc *memoryApplicationService) SaveMemory(ctx context.Context, workspaceID
         return nil, errors.New("用户 ID 格式错误")
     }
 
-    id, _ := uuid.NewV7()
-    m := &memoryModel.Memory{
-        ID:          id,
-        WorkspaceID: wid,
-        UserID:      uid,
-        MemoryType:  valueobject.MemoryType(memoryType),
-        Content:     content,
-        Tags:        tags,
-        Importance:  importance,
-        Date:        time.Now(),
-        CreatedAt:   time.Now(),
-    }
-    if sessionID != "" {
-        sid, err := uuid.Parse(sessionID)
+    mt := valueobject.MemoryType(memoryType)
+    m := memoryModel.NewMemory(wid, uid, mt, content, tags, importance)
+    if agentID != "" {
+        aid, err := uuid.Parse(agentID)
         if err != nil {
-            return nil, errors.New("会话 ID 格式错误")
+            return nil, errors.New("Agent ID 格式错误")
         }
-        m.SessionID = sid
+        m.AgentID = aid
     }
     if err = svc.memoryRepo.Save(spanCtx, m); err != nil {
         logger.Error(spanCtx, err.Error(), logger.ErrorField(err))
@@ -2317,6 +2343,7 @@ func toMemoryResponse(m *memoryModel.Memory) *response.MemoryResponse {
         MemoryID:    m.ID.String(),
         WorkspaceID: m.WorkspaceID.String(),
         UserID:      m.UserID.String(),
+        AgentID:     m.AgentID.String(),
         MemoryType:  m.MemoryType.String(),
         Content:     m.Content,
         Tags:        m.Tags,
@@ -2363,6 +2390,8 @@ import (
 )
 
 // SessionModuleSet Session 模块依赖注入聚合
+// 注意：SlidingWindowAssembler 不在此注入，因其 windowSize 来自 Agent 运行时配置，
+// 由应用服务在调用时动态构造：appService.NewSlidingWindowAssembler(cfg.WindowSize, msgRepo, itemRepo)
 var SessionModuleSet = wire.NewSet(
     sessionRepository.NewSessionRepository,
     sessionRepository.NewMessageRepository,
@@ -2442,7 +2471,6 @@ git commit -m "feat(session): Session/Memory 模块 Wire DI 接线"
   internal/domain/session/errors/codes.go
   internal/domain/session/event/session_completed.go
   internal/domain/session/event/session_interrupted.go
-  internal/domain/session/service/context_assembler.go
   internal/domain/memory/valueobject/memory_type.go
   internal/domain/memory/model/memory.go
   internal/domain/memory/repository/memory.go
@@ -2463,6 +2491,7 @@ git commit -m "feat(session): Session/Memory 模块 Wire DI 接线"
   internal/application/session/dto/command/command.go
   internal/application/session/dto/response/response.go
   internal/application/session/service/session.go
+  internal/application/session/service/context_assembler.go  ← ContextAssembler + MapItemsToMessages（Eino 映射）
   internal/application/memory/dto/response/response.go
   internal/application/memory/service/memory.go
   internal/di/modules/session.go
