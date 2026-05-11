@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="1200" height="860">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#00000018"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="860" fill="#f8fafc"/>
+  <text x="600" y="36" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="bold" fill="#1e293b">Airix Agent Platform — 系统架构图</text>
+  <text x="600" y="56" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#64748b">DDD + Clean Architecture · Go 1.25 · github.com/dysodeng/app</text>
+  <!-- 客户端层 -->
+  <rect x="30" y="75" width="1140" height="75" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="46" y="95" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#1d4ed8">客户端层</text>
+  <rect x="45" y="105" width="150" height="36" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="120" y="128" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#1e40af">Web / 移动端</text>
+  <rect x="235" y="105" width="150" height="36" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="310" y="128" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#1e40af">API 调用方</text>
+  <rect x="425" y="105" width="150" height="36" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="500" y="128" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#1e40af">WebSocket 客户端</text>
+  <rect x="625" y="105" width="150" height="36" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="700" y="128" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#1e40af">gRPC 调用方</text>
+  <rect x="815" y="105" width="150" height="36" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="890" y="128" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#1e40af">健康检查 / 监控</text>
+  <!-- 表现层 -->
+  <rect x="30" y="165" width="1140" height="90" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="46" y="184" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#15803d">表现层 · interfaces/</text>
+  <rect x="45" y="188" width="150" height="58" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="120" y="206" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">HTTP Server</text>
+  <text x="120" y="220" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">:8080</text>
+  <text x="120" y="232" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">Gin Router</text>
+  <text x="120" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">+ 中间件</text>
+  <rect x="235" y="188" width="150" height="58" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="310" y="206" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">WebSocket Server</text>
+  <text x="310" y="232" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">实时通信</text>
+  <text x="310" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">语音(TTS)</text>
+  <rect x="425" y="188" width="150" height="58" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="500" y="206" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">gRPC Server</text>
+  <text x="500" y="220" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">:3000</text>
+  <text x="500" y="232" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">Proto 处理</text>
+  <text x="500" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">gRPC Service</text>
+  <rect x="625" y="188" width="150" height="58" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="700" y="206" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">Event Server</text>
+  <text x="700" y="232" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">消息队列</text>
+  <text x="700" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">事件消费</text>
+  <rect x="815" y="188" width="150" height="58" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="890" y="206" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">Health Server</text>
+  <text x="890" y="220" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#166534">:5000</text>
+  <text x="890" y="232" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">健康检查</text>
+  <text x="890" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#15803d">就绪探针</text>
+  <!-- 应用层 -->
+  <rect x="30" y="278" width="1140" height="105" rx="8" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="46" y="297" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#92400e">应用层 · application/</text>
+  <rect x="30" y="300" width="150" height="72" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="105" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">passport</text>
+  <text x="105" y="331" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">应用服务</text>
+  <text x="105" y="343" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">登录/认证</text>
+  <text x="105" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">Token 管理</text>
+  <rect x="200" y="300" width="150" height="72" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="275" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">agent</text>
+  <text x="275" y="331" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">应用服务</text>
+  <text x="275" y="343" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">Agent 编排</text>
+  <text x="275" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">会话管理</text>
+  <rect x="370" y="300" width="150" height="72" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="445" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">session</text>
+  <text x="445" y="331" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">应用服务</text>
+  <text x="445" y="343" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">对话上下文</text>
+  <text x="445" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">策略组装</text>
+  <rect x="540" y="300" width="150" height="72" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="615" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">memory</text>
+  <text x="615" y="331" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">应用服务</text>
+  <text x="615" y="343" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">记忆读写</text>
+  <text x="615" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">Context 注入</text>
+  <rect x="710" y="300" width="150" height="72" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="785" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">workspace</text>
+  <text x="785" y="331" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">应用服务</text>
+  <text x="785" y="343" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">工作空间</text>
+  <text x="785" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">用户绑定</text>
+  <rect x="880" y="300" width="150" height="72" rx="6" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="955" y="317" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">file</text>
+  <text x="955" y="331" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#78350f">应用服务</text>
+  <text x="955" y="343" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">文件上传</text>
+  <text x="955" y="355" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#92400e">存储管理</text>
+  <!-- 领域层 -->
+  <rect x="30" y="404" width="1140" height="115" rx="8" fill="#fdf4ff" stroke="#e9d5ff" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="46" y="423" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#7e22ce">领域层 · domain/</text>
+  <rect x="25" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="90" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">passport</text>
+  <text x="90" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="90" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">认证/令牌</text>
+  <text x="90" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">值对象</text>
+  <rect x="165" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="230" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">user</text>
+  <text x="230" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="230" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">用户实体</text>
+  <text x="230" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">领域服务</text>
+  <rect x="305" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="370" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">agent</text>
+  <text x="370" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="370" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">Agent 聚合</text>
+  <text x="370" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">能力配置</text>
+  <rect x="445" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="510" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">session</text>
+  <text x="510" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="510" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">Session 聚合</text>
+  <text x="510" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">对话生命周期</text>
+  <rect x="585" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="650" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">memory</text>
+  <text x="650" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="650" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">Memory 聚合</text>
+  <text x="650" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">记忆存储接口</text>
+  <rect x="725" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="790" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">workspace</text>
+  <text x="790" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="790" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">工作空间</text>
+  <text x="790" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">成员权限</text>
+  <rect x="865" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="930" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">permission</text>
+  <text x="930" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="930" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">权限模型</text>
+  <text x="930" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">RBAC 接口</text>
+  <rect x="1005" y="428" width="130" height="80" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="1070" y="446" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">file</text>
+  <text x="1070" y="460" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#6b21a8">领域</text>
+  <text x="1070" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">文件元数据</text>
+  <text x="1070" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#7e22ce">存储端口</text>
+  <!-- 基础设施层 -->
+  <rect x="30" y="542" width="1140" height="125" rx="8" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="46" y="561" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#be123c">基础设施层 · infrastructure/</text>
+  <rect x="30" y="572" width="140" height="84" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="100" y="592" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">GORM</text>
+  <text x="100" y="606" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">(MySQL/PG)</text>
+  <text x="100" y="618" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">数据库 ORM</text>
+  <text x="100" y="630" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">gormigrate</text>
+  <rect x="185" y="572" width="140" height="84" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="255" y="592" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">Redis</text>
+  <text x="255" y="606" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">缓存</text>
+  <text x="255" y="618" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">分布式缓存</text>
+  <text x="255" y="630" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">Session 存储</text>
+  <rect x="340" y="572" width="140" height="84" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="410" y="592" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">消息队列 MQ</text>
+  <text x="410" y="618" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">事件驱动</text>
+  <text x="410" y="630" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">异步处理</text>
+  <rect x="495" y="572" width="140" height="84" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="565" y="592" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">对象存储</text>
+  <text x="565" y="606" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">OSS</text>
+  <text x="565" y="618" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">文件存储</text>
+  <text x="565" y="630" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">S3/阿里云</text>
+  <rect x="650" y="572" width="140" height="84" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="720" y="592" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">OpenTelemetry</text>
+  <text x="720" y="606" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">链路追踪</text>
+  <text x="720" y="618" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">Trace/Metrics</text>
+  <text x="720" y="630" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">日志(Zap)</text>
+  <rect x="805" y="572" width="140" height="84" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="875" y="592" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">TTS</text>
+  <text x="875" y="606" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">语音合成</text>
+  <text x="875" y="618" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">阿里云 TTS</text>
+  <text x="875" y="630" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">WebSocket 流</text>
+  <rect x="980" y="572" width="140" height="84" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="1050" y="592" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">Wire DI</text>
+  <text x="1050" y="606" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#9f1239">Google Wire</text>
+  <text x="1050" y="618" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">依赖注入</text>
+  <text x="1050" y="630" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#be123c">wire_gen.go</text>
+  <line x1="120" y1="141" x2="120" y2="186" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="310" y1="141" x2="310" y2="186" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="500" y1="141" x2="500" y2="186" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="700" y1="141" x2="700" y2="186" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="890" y1="141" x2="890" y2="186" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="120" y1="246" x2="105" y2="298" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <line x1="120" y1="246" x2="275" y2="298" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <line x1="120" y1="246" x2="445" y2="298" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <line x1="120" y1="246" x2="785" y2="298" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <line x1="310" y1="246" x2="445" y2="298" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <line x1="310" y1="246" x2="615" y2="298" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <line x1="120" y1="246" x2="955" y2="298" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <line x1="105" y1="372" x2="90" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="275" y1="372" x2="230" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="275" y1="372" x2="370" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="445" y1="372" x2="510" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="615" y1="372" x2="650" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="785" y1="372" x2="790" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="785" y1="372" x2="930" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="955" y1="372" x2="1070" y2="426" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+  <line x1="370" y1="508" x2="100" y2="570" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <line x1="510" y1="508" x2="255" y2="570" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <line x1="650" y1="508" x2="255" y2="570" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <line x1="790" y1="508" x2="100" y2="570" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <line x1="930" y1="508" x2="100" y2="570" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <line x1="1070" y1="508" x2="565" y2="570" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <rect x="30" y="692" width="600" height="60" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="46" y="712" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#475569">图例</text>
+  <line x1="60" y1="730" x2="90" y2="730" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="96" y="734" font-family="Arial,sans-serif" font-size="11" fill="#475569">主要调用流</text>
+  <line x1="200" y1="730" x2="230" y2="730" stroke="#2563eb" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="236" y="734" font-family="Arial,sans-serif" font-size="11" fill="#475569">跨层调用</text>
+  <line x1="340" y1="730" x2="370" y2="730" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="376" y="734" font-family="Arial,sans-serif" font-size="11" fill="#475569">控制流（应用→领域）</text>
+  <line x1="510" y1="730" x2="540" y2="730" stroke="#059669" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="546" y="734" font-family="Arial,sans-serif" font-size="11" fill="#475569">仓储接口实现</text>
+  <rect x="655" y="692" width="515" height="60" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="670" y="712" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#475569">依赖方向</text>
+  <text x="670" y="730" font-family="Arial,sans-serif" font-size="11" fill="#64748b">interfaces → application → domain ← infrastructure</text>
+  <text x="670" y="746" font-family="Arial,sans-serif" font-size="11" fill="#64748b">Google Wire 统一注入 · 内层不依赖外层</text>
+  <text x="600" y="782" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#94a3b8">Airix Agent Platform · DDD Clean Architecture · 2026</text>
+</svg>
