@@ -3,7 +3,6 @@ package modules
 import (
 	"github.com/google/wire"
 
-	appPort "github.com/dysodeng/app/internal/application/model/port"
 	appService "github.com/dysodeng/app/internal/application/model/service"
 	domainService "github.com/dysodeng/app/internal/domain/model/service"
 	modelAdapter "github.com/dysodeng/app/internal/infrastructure/adapter/model"
@@ -35,5 +34,4 @@ var ModelModuleSet = wire.NewSet(
 	// 适配层
 	modelAdapter.NewAdapterFactory,
 	modelAdapter.NewManager,
-	wire.Bind(new(appPort.Manager), new(*modelAdapter.Manager)),
 )

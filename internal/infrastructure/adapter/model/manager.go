@@ -10,6 +10,7 @@ import (
 	"github.com/cloudwego/eino/components/embedding"
 	einoModel "github.com/cloudwego/eino/components/model"
 
+	appPort "github.com/dysodeng/app/internal/application/model/port"
 	modelErrors "github.com/dysodeng/app/internal/domain/model/errors"
 	domainModel "github.com/dysodeng/app/internal/domain/model/model"
 	"github.com/dysodeng/app/internal/domain/model/repository"
@@ -25,7 +26,7 @@ type Manager struct {
 	factory           *AdapterFactory
 }
 
-func NewManager(providerRepo repository.ProviderRepository, instanceRepo repository.InstanceRepository, factory *AdapterFactory) *Manager {
+func NewManager(providerRepo repository.ProviderRepository, instanceRepo repository.InstanceRepository, factory *AdapterFactory) appPort.Manager {
 	return &Manager{
 		baseTraceSpanName: "infrastructure.adapter.model.Manager",
 		providerRepo:      providerRepo,
