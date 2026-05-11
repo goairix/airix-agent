@@ -23,6 +23,10 @@ type Security struct {
 	JWT struct {
 		Secret string `mapstructure:"secret"`
 	} `mapstructure:"jwt"`
+	Crypto struct {
+		AESKey string `mapstructure:"aes_key"`
+		AESIV  string `mapstructure:"aes_iv"`
+	} `mapstructure:"crypto"`
 }
 
 func appBindEnv(v *viper.Viper) {
@@ -35,4 +39,6 @@ func appBindEnv(v *viper.Viper) {
 
 func securityBindEnv(v *viper.Viper) {
 	_ = v.BindEnv("jwt.secret", "SECURITY_JWT_SECRET")
+	_ = v.BindEnv("crypto.aes_key", "SECURITY_CRYPTO_AES_KEY")
+	_ = v.BindEnv("crypto.aes_iv", "SECURITY_CRYPTO_AES_IV")
 }

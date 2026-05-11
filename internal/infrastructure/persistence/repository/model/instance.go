@@ -19,6 +19,12 @@ import (
 	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 )
 
+// InstanceRepositoryConfig 仓储加密配置
+type InstanceRepositoryConfig struct {
+	EncryptKey []byte
+	EncryptIV  []byte
+}
+
 type instanceRepository struct {
 	baseTraceSpanName string
 	txManager         transactions.TransactionManager
@@ -26,12 +32,12 @@ type instanceRepository struct {
 	encryptIV         []byte
 }
 
-func NewInstanceRepository(txManager transactions.TransactionManager, encryptKey, encryptIV []byte) repository.InstanceRepository {
+func NewInstanceRepository(txManager transactions.TransactionManager, cfg InstanceRepositoryConfig) repository.InstanceRepository {
 	return &instanceRepository{
 		baseTraceSpanName: "infrastructure.persistence.repository.model.InstanceRepository",
 		txManager:         txManager,
-		encryptKey:        encryptKey,
-		encryptIV:         encryptIV,
+		encryptKey:        cfg.EncryptKey,
+		encryptIV:         cfg.EncryptIV,
 	}
 }
 
