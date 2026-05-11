@@ -62,3 +62,10 @@ func NewSessionError(code, message string, err error) *DomainError {
 func NewMemoryError(code, message string, err error) *DomainError {
 	return NewDomainError(DomainMemory, code, message, err)
 }
+
+const DomainModel = "model"
+
+// NewModelError 创建模型领域错误
+func NewModelError(code, message string, err error) *DomainError {
+	return NewDomainError(DomainModel, code, message, err)
+}
