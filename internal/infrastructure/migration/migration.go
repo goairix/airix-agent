@@ -22,6 +22,7 @@ func margeMigrations() {
 	migrations = append(migrations, agentMigrations...)
 	migrations = append(migrations, sessionMigrations...)
 	migrations = append(migrations, memoryMigrations...)
+	migrations = append(migrations, modelMigrations...)
 }
 
 // Migrate 执行数据库迁移
