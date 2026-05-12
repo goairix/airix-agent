@@ -37,6 +37,28 @@ func RegisterRouter(router *gin.Engine, registry *http.HandlerRegistry) {
 			ws.POST(":id/members", registry.WorkspaceHandler.AssignAdmin)
 			ws.DELETE(":id/members/:userId", registry.WorkspaceHandler.RevokeAdmin)
 		}
+
+		// 模型厂商管理
+		providers := api.Group("model/providers")
+		{
+			providers.POST("", registry.ProviderHandler.CreateProvider)
+			providers.GET("", registry.ProviderHandler.ListProviders)
+			providers.GET(":id", registry.ProviderHandler.GetProvider)
+			providers.PUT(":id", registry.ProviderHandler.UpdateProvider)
+			providers.DELETE(":id", registry.ProviderHandler.DeleteProvider)
+		}
+
+		// 模型实例管理（工作空间维度）
+		instances := api.Group("workspaces/:workspaceId/model/instances")
+		{
+			instances.POST("", registry.InstanceHandler.CreateInstance)
+			instances.GET("", registry.InstanceHandler.ListInstances)
+			instances.GET(":id", registry.InstanceHandler.GetInstance)
+			instances.PUT(":id", registry.InstanceHandler.UpdateInstance)
+			instances.DELETE(":id", registry.InstanceHandler.DeleteInstance)
+			instances.PUT(":id/enable", registry.InstanceHandler.EnableInstance)
+			instances.PUT(":id/disable", registry.InstanceHandler.DisableInstance)
+		}
 	}
 
 	// 健康检查

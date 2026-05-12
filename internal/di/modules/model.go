@@ -8,6 +8,7 @@ import (
 	modelAdapter "github.com/dysodeng/app/internal/infrastructure/adapter/model"
 	"github.com/dysodeng/app/internal/infrastructure/config"
 	modelRepository "github.com/dysodeng/app/internal/infrastructure/persistence/repository/model"
+	modelHandler "github.com/dysodeng/app/internal/interfaces/http/handler/model"
 )
 
 // ProvideInstanceRepositoryConfig 从应用配置提取 Instance 仓储加密配置
@@ -34,4 +35,8 @@ var ModelModuleSet = wire.NewSet(
 	// 适配层
 	modelAdapter.NewAdapterFactory,
 	modelAdapter.NewManager,
+
+	// HTTP handler
+	modelHandler.NewProviderHandler,
+	modelHandler.NewInstanceHandler,
 )
