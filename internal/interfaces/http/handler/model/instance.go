@@ -8,6 +8,7 @@ import (
 
 	"github.com/dysodeng/app/internal/application/model/dto/command"
 	appService "github.com/dysodeng/app/internal/application/model/service"
+	bizCtx "github.com/dysodeng/app/internal/infrastructure/pkg/context"
 	"github.com/dysodeng/app/internal/infrastructure/pkg/telemetry/trace"
 	modelRequest "github.com/dysodeng/app/internal/interfaces/http/dto/request/model"
 	"github.com/dysodeng/app/internal/interfaces/http/dto/response/api"
@@ -38,7 +39,7 @@ func (h *InstanceHandler) CreateInstance(ctx *gin.Context) {
 	}
 
 	res, err := h.modelService.CreateInstance(spanCtx, &command.CreateInstanceCommand{
-		WorkspaceID:  ctx.Param("workspaceId"),
+		WorkspaceID:  bizCtx.NewBizContext(spanCtx).Data().WorkspaceID,
 		ProviderID:   req.ProviderID,
 		ModelName:    req.ModelName,
 		Capability:   req.Capability,
@@ -73,7 +74,7 @@ func (h *InstanceHandler) ListInstances(ctx *gin.Context) {
 	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(ctx.DefaultQuery("page_size", "20"))
 
-	res, err := h.modelService.ListInstances(spanCtx, ctx.Param("workspaceId"), page, pageSize)
+	res, err := h.modelService.ListInstances(spanCtx, bizCtx.NewBizContext(spanCtx).Data().WorkspaceID, page, pageSize)
 	if err != nil {
 		ctx.JSON(http.StatusOK, api.Fail(spanCtx, err.Error(), api.CodeFail))
 		return

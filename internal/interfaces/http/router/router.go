@@ -48,8 +48,8 @@ func RegisterRouter(router *gin.Engine, registry *http.HandlerRegistry) {
 			providers.DELETE(":id", registry.ProviderHandler.DeleteProvider)
 		}
 
-		// 模型实例管理（工作空间维度）
-		instances := api.Group("workspaces/:workspaceId/model/instances")
+		// 模型实例管理
+		instances := api.Group("model/instances")
 		{
 			instances.POST("", registry.InstanceHandler.CreateInstance)
 			instances.GET("", registry.InstanceHandler.ListInstances)
