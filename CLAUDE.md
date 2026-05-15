@@ -130,7 +130,7 @@ GORM 数据实体字段 tag 必须包含 `type`、`not null`、`comment`。
 - 每个服务结构体包含 `baseTraceSpanName` 字段，格式 `<层>.<模块>.service.<ServiceName>`，每个方法入口创建 span
 - 构造函数命名 `NewXxxService`，入参为接口类型，返回值为接口类型
 - 定义类型时，必要的注释要加上
-- 禁止在代码文件中注释当前文件路径
+- 禁止在代码文件中注释当前文件路径，包括 `package` 声明上方的路径注释（如 `// internal/xxx/xxx.go`）
 
 ## DDD 约束
 
@@ -156,5 +156,9 @@ GORM 数据实体字段 tag 必须包含 `type`、`not null`、`comment`。
 提交消息中**不允许**添加任何署名信息（如 `Co-Authored-By`、`Signed-off-by` 等）。
 
 Pre-commit hook 执行链：goimports → gofmt → go vet → shadow → golangci-lint。任一检查不通过则拒绝提交。
+
+## 文件写入规则
+
+当要写入的文件内容/代码量较大时，必须分多次小批量写入，禁止一次性写入大量内容。Write 工具在单次写入过大内容时存在 bug，会导致内容写不进去。应将大文件拆分为多次 Edit 或分段 Write 操作完成。
 
 ## 与用户交互使用中文
